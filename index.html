@@ -44,8 +44,8 @@
             .attr("r", outerRadius);
 
     queue()
-            .defer(d3.csv, 'hoods.csv')
-            .defer(d3.text, 'matrix.csv')
+            .defer(d3.csv, 'hoods_nyc.csv')
+            .defer(d3.text, 'matrix_nyc.csv')
             .await(ready);
 
     function ready(error, hoods, data){

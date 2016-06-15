@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href="css/style.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="//d3js.org/queue.v1.min.js"></script>
 
-<div id="chartContainer"></div>
+<div id="chartContainer">
+    <h1 class="text-center">2016 Bike to Work Day Traffic: Manhattan</h1>
+</div>
+
+<div id="textContainer">
+    <h2 id="text" class="text-left">There were 2788 riders using Strava during Bike to Work Day!</h2>
+</div>
 
 <script>
-    var width = 720,
-            height = 720,
+    var width = 600,
+            height = 600,
             outerRadius = Math.min(width, height) / 2 - 10,
             innerRadius = outerRadius - 24;
 
@@ -66,7 +73,8 @@
                 .data(layout.groups)
                 .enter().append("g")
                 .attr("class", "group")
-                .on("mouseover", mouseover);
+                .on("mouseover", mouseover)
+                .on("mouseout", mouseout);
 
         group.append("title").text(function(d, i) {
             return hoods[i].name + ": " + d.value + " bikers starting here.";
@@ -95,7 +103,9 @@
                 .enter().append("path")
                 .attr("class", "chord")
                 .style("fill", function(d) { return hoods[d.source.index].color; })
-                .attr("d", path);
+                .attr("d", path)
+                .on("mouseover", mouseover_chord)
+                .on("mouseout", mouseout);
 
         chord.append("title").text(function(d) {
             return hoods[d.source.index].name
@@ -111,7 +121,25 @@
                 return p.source.index != i
                         && p.target.index != i;
             });
+            d3.select('#text').text("The " + hoods[i].name + " neighborhood had " + d.value + " bikers starting here.")
         }
+
+        function mouseout(d, i){
+            chord.attr("class", "chord");
+            d3.select('#text').text("There were 2788 riders using Strava during Bike to Work Day!")
+        }
+
+        function mouseover_chord(d,i){
+            d3.select(this).attr("class", "chordHover");
+            chord.classed("fade", function(p){
+                return d.source.index != p.source.index;
+            });
+            d3.select('#text').text(
+                    d.source.value + " riders started in " + hoods[d.source.index].name + " and ended in " + hoods[d.target.index].name +
+                            ". " + d.target.value + " riders started in " + hoods[d.target.index].name + " and ended in " + hoods[d.source.index].name + "."
+            )
+        }
+
 
     }
 

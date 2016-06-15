@@ -9,9 +9,31 @@
 
 path.chord {
     stroke: #000;
-    stroke-width: .25px;
+    stroke-width: .25;
+}
+
+path.chordHover{
+    stroke: #000;
+    stroke-width: 1.5;
 }
 
 #circle:hover path.fade {
     display: none;
+}
+
+
+#chartContainer{
+    position:relative;
+    margin:auto;
+    width:600px;
+}
+
+#textContainer{
+    position:relative;
+    margin:auto;
+    width:600px;
+}
+
+*{
+    font-family: Lato;
 }

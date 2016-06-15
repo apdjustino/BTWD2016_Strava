@@ -117,23 +117,33 @@
         });
 
         function mouseover(d, i) {
-            chord.classed("fade", function(p) {
-                return p.source.index != i
-                        && p.target.index != i;
-            });
+            chord.transition().duration(500)
+                    .style("opacity", function(p){
+                        if(p.source.index != i && p.target.index != i){
+                            return "0"
+                        }
+                    });
             d3.select('#text').text("The " + hoods[i].name + " neighborhood had " + d.value + " bikers starting here.")
         }
 
         function mouseout(d, i){
+            chord.transition().duration(500).style("opacity", 1);
             chord.attr("class", "chord");
             d3.select('#text').text("There were 2788 riders using Strava during Bike to Work Day!")
         }
 
         function mouseover_chord(d,i){
             d3.select(this).attr("class", "chordHover");
-            chord.classed("fade", function(p){
-                return d.source.index != p.source.index;
+//            chord.classed("fade", function(p){
+//                return d.source.index != p.source.index;
+//            });
+
+            chord.transition().duration(500).style("opacity", function(p){
+                if(d.source.index != p.source.index){
+                    return "0"
+                }
             });
+
             d3.select('#text').text(
                     d.source.value + " riders started in " + hoods[d.source.index].name + " and ended in " + hoods[d.target.index].name +
                             ". " + d.target.value + " riders started in " + hoods[d.target.index].name + " and ended in " + hoods[d.source.index].name + "."

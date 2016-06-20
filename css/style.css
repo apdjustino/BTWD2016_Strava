@@ -24,16 +24,29 @@ path.chordHover{
 
 #chartContainer{
     position:relative;
-    margin:auto;
+    margin-top:50px;
     width:600px;
 }
 
 #textContainer{
     position:relative;
     margin:auto;
-    width:600px;
+    height: 150px;
+    padding:10px;
 }
 
 *{
     font-family: Lato;
+}
+
+#mapContainer{
+    position:relative;
+    height:600px;
+    margin-top:50px;
+}
+
+.regions{
+    stroke: #000;
+    stroke-width: 1;
+    fill:none;
 }

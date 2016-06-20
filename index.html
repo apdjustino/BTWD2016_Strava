@@ -6,19 +6,32 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link href="css/style.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 </head>
 <body>
 
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="//d3js.org/queue.v1.min.js"></script>
 
-<div id="chartContainer">
+<div id="textContainer">
     <h1 class="text-center">2016 DRCOG Bike to Work Day Traffic</h1>
+    <h2 id="text" class="text-center">There are 13,123 riders that shared location information during 2016 DRCOG Bike to Work Day!</h2>
 </div>
 
-<div id="textContainer">
-    <h2 id="text" class="text-left">There are 13,123 riders that shared location information during 2016 DRCOG Bike to Work Day!</h2>
+<div class="row">
+    <div class="col-lg-6 cols-md-6 col-sm-6 col-xs-6">
+        <div id="chartContainer"></div>
+    </div>
+    <div class="col-lg-6 cols-md-6 col-sm-6 col-xs-6">
+        <div id="mapContainer"></div>
+    </div>
 </div>
+
+
+
+
+
 
 <script>
     var width = 600,
@@ -53,9 +66,10 @@
     queue()
             .defer(d3.csv, 'hoods_drcog.csv')
             .defer(d3.text, 'matrix_drcog.csv')
+            .defer(d3.json, 'drcog_regions.geojson')
             .await(ready);
 
-    function ready(error, hoods, data){
+    function ready(error, hoods, data, shape){
         if(error) throw error;
 
         var matrix = d3.csv.parseRows(data).map(function(row){
@@ -124,12 +138,20 @@
                         }
                     });
             d3.select('#text').text("The " + hoods[i].name + " neighborhood had " + d.value + " bikers starting here.")
+            d3.selectAll('.regions').transition().duration(500).style("fill", function(q){
+                if(hoods[i].name == q.properties.region){
+                    return "#FF7F00";
+                }else{
+                    return "none"
+                }
+            })
         }
 
         function mouseout(d, i){
             chord.transition().duration(500).style("opacity", 1);
             chord.attr("class", "chord");
-            d3.select('#text').text("There were 2788 riders using Strava during Bike to Work Day!")
+            d3.select('#text').text("There are 13,123 riders that shared location information during 2016 DRCOG Bike to Work Day!")
+            d3.selectAll('.regions').transition().duration(500).style("fill", "none");
         }
 
         function mouseover_chord(d,i){
@@ -144,12 +166,84 @@
                 }
             });
 
+            d3.selectAll(".regions").transition().duration(500).style("fill", function(q){
+                if(q.properties.region === hoods[d.source.index].name || q.properties.region === hoods[d.target.index].name ){
+                    return "#FF7F00"
+                }else{
+                    return "none"
+                }
+            });
+
             d3.select('#text').text(
                     d.source.value + " riders started in " + hoods[d.source.index].name + " and ended in " + hoods[d.target.index].name +
                             ". " + d.target.value + " riders started in " + hoods[d.target.index].name + " and ended in " + hoods[d.source.index].name + "."
             )
         }
 
+        var MapBoxOutdoors = L.tileLayer('http://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: 'abcd',
+            id: 'mapbox.outdoors',
+            accessToken: 'pk.eyJ1IjoiZHJjMGciLCJhIjoiY2lvbG44bXR6MDFxbHY0amJ1bTB3bGNqdiJ9.yVn2tfcPeU-adm015g_8xg'
+        });
+
+        map = L.map("mapContainer", {
+            zoom: 10,
+            center: new L.LatLng(39.79, -105),
+            layers: [MapBoxOutdoors],
+            dragging: false,
+            touchZoom: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            tap: false,
+            zoomControl: false
+        });
+
+        var svg_map = d3.select(map.getPanes().overlayPane).append("svg");
+        var g = svg_map.append("g").attr("class", "leaflet-zoom-hide");
+
+//        var shape = topojson.feature(blockGrp, blockGrp.objects.drcog_bg);
+        console.log(shape);
+
+        var transform = d3.geo.transform({point: projectPoint}),
+                path_geo = d3.geo.path().projection(transform);
+
+        var feature = g.selectAll("mapPath")
+                .data(shape.features)
+                .enter()
+                .append("path")
+                .attr("class", "regions");
+
+        var title= feature.append("svg:title")
+                .attr("class", "pathTitle");
+
+
+        map.on("viewreset", reset);
+        reset();
+
+
+        function reset() {
+            var bounds = path_geo.bounds(shape), topLeft = bounds[0],
+                    bottomRight = bounds[1];
+
+            svg_map .attr("width", bottomRight[0] - topLeft[0])
+                    .attr("height", bottomRight[1] - topLeft[1])
+                    .style("left", topLeft[0] + "px")
+                    .style("top", topLeft[1] + "px");
+
+            g   .attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+            feature.attr("d", path_geo);
+
+
+
+        }
+
+        function projectPoint(x, y) {
+            var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+            this.stream.point(point.x, point.y);
+        }
 
     }
 

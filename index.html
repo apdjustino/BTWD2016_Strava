@@ -13,11 +13,11 @@
 <script src="//d3js.org/queue.v1.min.js"></script>
 
 <div id="chartContainer">
-    <h1 class="text-center">2016 Bike to Work Day Traffic: Manhattan</h1>
+    <h1 class="text-center">2016 DRCOG Bike to Work Day Traffic</h1>
 </div>
 
 <div id="textContainer">
-    <h2 id="text" class="text-left">There were 2788 riders using Strava during Bike to Work Day!</h2>
+    <h2 id="text" class="text-left">There were 13,123 riders using Strava during Bike to Work Day!</h2>
 </div>
 
 <script>
@@ -51,8 +51,8 @@
             .attr("r", outerRadius);
 
     queue()
-            .defer(d3.csv, 'hoods_nyc.csv')
-            .defer(d3.text, 'matrix_nyc.csv')
+            .defer(d3.csv, 'hoods_drcog.csv')
+            .defer(d3.text, 'matrix_drcog.csv')
             .await(ready);
 
     function ready(error, hoods, data){

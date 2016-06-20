@@ -138,9 +138,9 @@
                         }
                     });
             d3.select('#text').text("The " + hoods[i].name + " neighborhood had " + d.value + " bikers starting here.")
-            d3.selectAll('.regions').transition().duration(500).style("fill", function(q){
+            d3.selectAll('.regions').transition().duration(250).style("fill", function(q){
                 if(hoods[i].name == q.properties.region){
-                    return "#FF7F00";
+                    return hoods[i].color;
                 }else{
                     return "none"
                 }
@@ -151,7 +151,7 @@
             chord.transition().duration(500).style("opacity", 1);
             chord.attr("class", "chord");
             d3.select('#text').text("There are 13,123 riders that shared location information during 2016 DRCOG Bike to Work Day!")
-            d3.selectAll('.regions').transition().duration(500).style("fill", "none");
+            d3.selectAll('.regions').transition().duration(250).style("fill", "none");
         }
 
         function mouseover_chord(d,i){
@@ -166,9 +166,13 @@
                 }
             });
 
-            d3.selectAll(".regions").transition().duration(500).style("fill", function(q){
+            d3.selectAll(".regions").transition().duration(250).style("fill", function(q){
                 if(q.properties.region === hoods[d.source.index].name || q.properties.region === hoods[d.target.index].name ){
-                    return "#FF7F00"
+                    if(q.properties.region === hoods[d.source.index].name){
+                        return hoods[d.source.index].color;
+                    }else{
+                        return hoods[d.target.index].color;
+                    }
                 }else{
                     return "none"
                 }

@@ -109,8 +109,8 @@
                 .text(function(d, i) { return hoods[i].name; });
 
         // Remove the labels that don't fit. :(
-        groupText.filter(function(d, i) { return groupPath[0][i].getTotalLength() / 2 - 16 < this.getComputedTextLength(); })
-                .remove();
+        groupText.filter(function(d, i) { return groupPath[0][i].getTotalLength() / 2 - 25 < this.getComputedTextLength(); })
+                .selectAll("textPath").style("font-size", "7px");
 
         var chord = svg.selectAll(".chord")
                 .data(layout.chords)

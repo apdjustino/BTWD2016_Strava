@@ -26,6 +26,8 @@ path.chordHover{
     position:relative;
     margin-top:50px;
     width:600px;
+    margin-right:auto;
+    margin-left:auto
 }
 
 #textContainer{
@@ -38,9 +40,10 @@ path.chordHover{
 
 #mapContainer{
     height:600px;
+    width:600px;
     margin-top:50px;
-    margin-right:50px;
-    border: 1px solid black;
+    margin-right:auto;
+    margin-left:auto;
 
 
 }

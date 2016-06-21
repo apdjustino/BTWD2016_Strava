@@ -35,9 +35,6 @@ path.chordHover{
     padding:10px;
 }
 
-*{
-    font-family: Lato;
-}
 
 #mapContainer{
     position:relative;
@@ -52,4 +49,48 @@ path.chordHover{
     stroke: #000;
     stroke-width: 1;
     fill:none;
+}
+
+#mainContainer{
+    background-color: lightgray;
+}
+
+@font-face {
+    font-family: Ubahn;
+    src: url('Ubahn.ttf');
+    src:
+    local('Ubahn'),
+    url('Ubahn.ttf')
+    format('opentype');
+}
+h1 {
+    display: block;
+    font-family: Ubahn;
+    font-size: 4em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+h2 {
+    display: block;
+    font-family: Ubahn;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+h3 {
+    display: block;
+    font-family: Ubahn;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
 }

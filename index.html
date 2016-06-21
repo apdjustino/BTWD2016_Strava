@@ -7,26 +7,48 @@
     <link href="css/style.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+    <style>
+
+
+    </style>
+
 </head>
 <body>
 
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="//d3js.org/queue.v1.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://d3js.org/d3-queue.v3.min.js" charset="utf-8"></script>
 
-<div id="textContainer">
-    <h1 class="text-center">2016 DRCOG Bike to Work Day Traffic</h1>
-    <h2 id="text" class="text-center">There are 13,123 riders that shared location information during 2016 DRCOG Bike to Work Day!</h2>
+<div id="mainContainer">
+    <div id="textContainer">
+        <h1 class="text-center">2016 DRCOG Bike to Work Day Traffic</h1>
+        <h2 id="text" class="text-center">There are 13,123 riders that shared location information during 2016 DRCOG Bike to Work Day!</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 cols-md-6 col-sm-6 col-xs-6">
+            <div id="chartContainer"></div>
+        </div>
+        <div class="col-lg-6 cols-md-6 col-sm-6 col-xs-6">
+            <div id="mapContainer"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h3 class="text-left" id="helpTag">
+                <a>
+                    <span class="glyphicon glyphicon-question-sign"></span>
+                    More Info
+                </a>
+                <span style="opacity:0" id="helpMessage">This visualization uses Strava bike data to display the movement of riders in the Denver Region on Bike to Work Day 2016.   Hover over the diagram to see where riders are beginning and ending their rides.</span>
+            </h3>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-6 cols-md-6 col-sm-6 col-xs-6">
-        <div id="chartContainer"></div>
-    </div>
-    <div class="col-lg-6 cols-md-6 col-sm-6 col-xs-6">
-        <div id="mapContainer"></div>
-    </div>
-</div>
+
 
 
 
@@ -63,11 +85,19 @@
     svg.append("circle")
             .attr("r", outerRadius);
 
-    queue()
+    d3.queue()
             .defer(d3.csv, 'hoods_drcog.csv')
             .defer(d3.text, 'matrix_drcog.csv')
             .defer(d3.json, 'drcog_regions.geojson')
             .await(ready);
+
+    d3.select('#helpTag')
+        .on("mouseover", function(d){
+            d3.select('#helpMessage').transition().duration(500).style("opacity", 1)
+        }
+    ).on("mouseout", function(d){
+                d3.select('#helpMessage').transition().duration(500).style("opacity", 0);
+            });
 
     function ready(error, hoods, data, shape){
         if(error) throw error;
@@ -105,12 +135,13 @@
 
         groupText.append("textPath")
                 .attr("xlink:href", function(d, i) { return "#group" + i; })
-                .style('font-size', "10px")
+                .style('font-size', "18px")
+                .style('font-family', "Ubahn")
                 .text(function(d, i) { return hoods[i].name; });
 
         // Remove the labels that don't fit. :(
-        groupText.filter(function(d, i) { return groupPath[0][i].getTotalLength() / 2 - 25 < this.getComputedTextLength(); })
-                .selectAll("textPath").style("font-size", "7px");
+        groupText.filter(function(d, i) { return groupPath[0][i].getTotalLength() / 2 - 30 < this.getComputedTextLength(); })
+                .selectAll("textPath").style("font-size", "8px");
 
         var chord = svg.selectAll(".chord")
                 .data(layout.chords)

@@ -239,7 +239,7 @@
         var g = svg_map.append("g").attr("class", "leaflet-zoom-hide");
 
 //        var shape = topojson.feature(blockGrp, blockGrp.objects.drcog_bg);
-        console.log(shape);
+
 
         var transform = d3.geo.transform({point: projectPoint}),
                 path_geo = d3.geo.path().projection(transform);

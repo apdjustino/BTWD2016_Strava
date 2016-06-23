@@ -94,7 +94,7 @@
 
     d3.queue()
             .defer(d3.csv, 'hoods_drcog.csv')
-            .defer(d3.text, 'drcog_matrix_strava_b4_10.csv')
+            .defer(d3.text, 'drcog_matrix_strava.csv')
             .defer(d3.json, 'drcog_regions.geojson')
             .await(ready);
 

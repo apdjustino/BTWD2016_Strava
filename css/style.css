@@ -100,7 +100,7 @@ h3 {
 }
 
 .logo{
-    width: 150px;
+    width: 325px;
     height: auto;
     float:right;
 }
@@ -117,7 +117,8 @@ h3 {
 }
 
 .banner{
-    border: 1px solid black;
+    //border: 1px solid black;
+    background-color: #ff7f00;
 
 }
 

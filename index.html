@@ -33,7 +33,7 @@
 
 <div id="mainContainer">
     <div id="textContainer">
-        <h2 id="text" class="text-center">There are 5,122 riders that shared STRAVA data during 2016 DRCOG Bike to Work Day!</h2>
+        <h2 id="text" class="text-center">There are 2,710 riders that shared STRAVA data during 2016 DRCOG Bike to Work Day!</h2>
     </div>
 
     <div class="row">
@@ -97,7 +97,7 @@
 
     d3.queue()
             .defer(d3.csv, 'hoods_drcog.csv')
-            .defer(d3.text, 'drcog_matrix_strava.csv')
+            .defer(d3.text, 'drcog_matrix_strava_early.csv')
             .defer(d3.json, 'drcog_regions.geojson')
             .await(ready);
 
@@ -191,7 +191,7 @@
         function mouseout(d, i){
             chord.transition().duration(500).style("opacity", 1);
             chord.attr("class", "chord");
-            d3.select('#text').text("There are 5,122 riders that shared STRAVA data during 2016 DRCOG Bike to Work Day!");
+            d3.select('#text').text("There are 2,710 riders that shared STRAVA data during 2016 DRCOG Bike to Work Day!");
             d3.selectAll('.regions').transition().duration(250).style("fill", "none");
         }
 

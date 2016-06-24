@@ -95,7 +95,7 @@
     d3.queue()
             .defer(d3.csv, 'hoods_drcog.csv')
             .defer(d3.text, 'drcog_matrix_strava.csv')
-            .defer(d3.json, 'drcog_regions.geojson')
+            .defer(d3.json, 'drcog_regions2.geojson')
             .await(ready);
 
     d3.select('#helpTag')
